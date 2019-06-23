@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,14 @@ namespace cauldron
     public MainWindow()
     {
       InitializeComponent();
+      mainImage.DataContext = CauldronControl.CauldronInstance;
+      //mainImage = ImageSourceForImageControl(new Bitmap());
+    }
+
+    public ImageSource ImageSourceForImageControl(Bitmap yourBitmap)
+    {
+      ImageSourceConverter c = new ImageSourceConverter();
+      return (ImageSource)c.ConvertFrom(yourBitmap);
     }
   }
 }

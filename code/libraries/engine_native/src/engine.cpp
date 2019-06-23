@@ -1,9 +1,14 @@
 #include "engine.h"
 #include "visual/color.h"
+#include "visual/bitmap.h"
 
-void test()
+using namespace bs::util::visual;
+
+
+
+void bs::core::Core::DoThing()
 {
-  bs::util::visual::Color testColor;
-  
-  testColor.Test();
+  Color testColor(0xFFBBCCDD);
+  Bitmap testBitmap;
+
 }

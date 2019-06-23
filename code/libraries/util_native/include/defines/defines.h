@@ -1,6 +1,10 @@
 #ifndef UTIL_NATIVE_DEFINES_H
 #define UTIL_NATIVE_DEFINES_H
 
+#include <cstdint>
+
+#define INLINE
+
 #ifndef INLINE
   #ifdef _WINDOWS
     #define INLINE __forceinline
@@ -16,5 +20,11 @@
     #define EXPORT 
   #endif
 #endif
+
+//TODO find a place for these type redefinitions 
+using u8 = unsigned char;
+using u32 = unsigned int;
+using s32 = int32_t;
+
 
 #endif // !UTIL_NATIVE_DEFINES_H
