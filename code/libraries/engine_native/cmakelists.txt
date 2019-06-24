@@ -1,5 +1,0 @@
-cmake_minimum_required ( VERSION 3.15.0 )
-
-add_brewing_station_library( engine_native util_native threading_native )
-
-target_link_libraries( engine_native util_native )

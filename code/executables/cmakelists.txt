@@ -1,0 +1,65 @@
+cmake_minimum_required ( VERSION 3.15.0 )
+
+MACRO ( add_brewing_station_executable EXE_NAME )
+    file( GLOB_RECURSE SRC_REC     "src/*.cpp" )
+    file( GLOB_RECURSE INL_REC     "inl/*.inl" )
+    file( GLOB_RECURSE INCLUDE_REC "include/*.h" )
+
+    set( SUB_FILES ${SUB_FILES} ${SRC_REC} )
+    set( SUB_FILES ${SUB_FILES} ${INL_REC} )
+    set( SUB_FILES ${SUB_FILES} ${INCLUDE_REC} )
+    
+    add_executable( ${EXE_NAME} ${SUB_FILES} )
+    
+    set_target_properties( ${EXE_NAME} PROPERTIES FOLDER "executables" )
+    
+    source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SUB_FILES} )
+    
+    include_directories( "include" )
+    link_directories( "${BREWING_STATION_LIBRARY_OUTPUT_DIRECTORY}" )
+    
+    message( STATUS "- ${EXE_NAME}" ) 
+
+    if ( ${ARGC} GREATER "1" ) 
+        message( STATUS "- - - - - dependencies:" )  
+    endif()
+
+    foreach (SUB_DEPENDENCY ${ARGN} )
+        add_dependencies( ${EXE_NAME} ${SUB_DEPENDENCY} )
+
+        get_target_property( DEPENDENCY_SOURCE_DIR ${SUB_DEPENDENCY} SOURCE_DIR )
+        include_directories( "${DEPENDENCY_SOURCE_DIR}/include" )
+        
+        target_link_libraries( ${EXE_NAME} ${SUB_DEPENDENCY} )
+        
+        message( STATUS "- - - - - - - ${SUB_DEPENDENCY}" )
+    endforeach()
+
+ENDMACRO()
+
+MACRO ( include_external_brewing_station_managed_executable EXE_NAME )
+    include_external_msproject( ${EXE_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/${EXE_NAME}.csproj" )
+    set_target_properties( ${EXE_NAME} PROPERTIES FOLDER "executables" )
+
+   message( STATUS "- ${EXE_NAME}" )  
+
+ENDMACRO()
+
+###################################################################
+###################################################################
+
+message( STATUS "---------------------------------------" )
+message( STATUS "APPLICATIONS: ")
+
+#applications
+
+if ( "${BREWING_STATION_TARGET_PLATFORM}" MATCHES "windows" )
+    add_subdirectory( cauldron )
+    add_subdirectory( brew_windows )
+endif()
+
+if ( "${BREWING_STATION_TARGET_PLATFORM}" MATCHES "android" )
+    add_subdirectory( android_only_test )
+endif()
+
+message( STATUS "---------------------------------------" )

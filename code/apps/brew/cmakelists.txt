@@ -1,6 +1,0 @@
-cmake_minimum_required ( VERSION 3.15.0 )
-
-add_brewing_station_app( brew engine_native )
-
-#set install targets
-install( TARGETS brew DESTINATION "bin/brew" )

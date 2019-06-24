@@ -1,4 +1,0 @@
-cmake_minimum_required ( VERSION 3.15.0 )
-
-add_brewing_station_shared_library( cauldron_native engine_native util_native )
-
