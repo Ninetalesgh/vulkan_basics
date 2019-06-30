@@ -4,6 +4,7 @@
 namespace bs::core
 {
   class PlatformDesc;
+  class IApp;
   class IModule;
 
   class ICore
@@ -11,11 +12,13 @@ namespace bs::core
   public:
 
     virtual void Init(PlatformDesc*) = 0;
+    virtual void RegisterApp(IApp*) = 0;
     virtual void RegisterModule(IModule*) = 0;
     virtual void Run() = 0;
 
 
     virtual void UnregisterModule(IModule*) = 0;
+    virtual void UnregisterApp(IApp*) = 0;
     virtual void End() = 0;
   };
 };
