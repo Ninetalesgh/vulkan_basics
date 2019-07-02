@@ -1,3 +1,3 @@
 @echo off
 
-call gen.bat windows x64 brew_windows
+call gen.bat "Visual Studio 15 2017" windows x64 brew_windows

@@ -7,34 +7,41 @@ namespace bs::core
   class Core : public ICore
   {
   public:
-    virtual void Init(PlatformDesc*) override
+    void Init(PlatformDesc*) override
     {
     }
 
-    virtual void RegisterModule(IModule*) override
+    virtual void RegisterApp(IApp*) override
     {
     }
 
-    virtual void Run() override
+    virtual void UnregisterApp(IApp*) override
     {
     }
 
-    virtual void UnregisterModule(IModule*) override
+    void RegisterModule(modules::IModule*) override
     {
     }
 
-    virtual void End() override
+    void UnregisterModule(modules::IModule*) override
     {
     }
 
+    void Run() override
+    {
+    }
+
+    void End() override
+    {
+    }
 
   private:
-    
+    // Inherited via ICore
   };
 
-
-
-
-
-
+  unique<ICore> ICore::Create()
+  {
+    return std::make_unique<Core>();
+    //return new Core();
+  }
 };

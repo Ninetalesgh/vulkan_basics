@@ -2,9 +2,9 @@
 #define CORE_SCENE_H
 
 #include "core/object.h"
-namespace bs::core
+namespace bs::scene
 {
-  class IScene : IObject
+  class IScene : public core::IObject
   {
   public:
   };

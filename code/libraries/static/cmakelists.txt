@@ -44,10 +44,10 @@ message( STATUS "---------------------------------------" )
 message( STATUS "STATIC LIBRARIES: ")
 
 add_subdirectory( common )
-add_subdirectory( renderer )
 add_subdirectory( core )
 
 if ( "${BREWING_STATION_TARGET_PLATFORM}" MATCHES "windows" )
+    add_subdirectory( renderer_cpu )
     add_subdirectory( renderer_dx12 )
 endif()
 

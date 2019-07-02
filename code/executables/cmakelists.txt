@@ -9,6 +9,7 @@ MACRO ( add_brewing_station_executable EXE_NAME )
     set( SUB_FILES ${SUB_FILES} ${INL_REC} )
     set( SUB_FILES ${SUB_FILES} ${INCLUDE_REC} )
     
+    link_directories( "${BREWING_STATION_LIBRARY_OUTPUT_DIRECTORY}" )
     add_executable( ${EXE_NAME} ${SUB_FILES} )
     
     set_target_properties( ${EXE_NAME} PROPERTIES FOLDER "executables" )
@@ -16,7 +17,6 @@ MACRO ( add_brewing_station_executable EXE_NAME )
     source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SUB_FILES} )
     
     include_directories( "include" )
-    link_directories( "${BREWING_STATION_LIBRARY_OUTPUT_DIRECTORY}" )
     
     message( STATUS "- ${EXE_NAME}" ) 
 
@@ -29,7 +29,7 @@ MACRO ( add_brewing_station_executable EXE_NAME )
 
         get_target_property( DEPENDENCY_SOURCE_DIR ${SUB_DEPENDENCY} SOURCE_DIR )
         include_directories( "${DEPENDENCY_SOURCE_DIR}/include" )
-        
+
         target_link_libraries( ${EXE_NAME} ${SUB_DEPENDENCY} )
         
         message( STATUS "- - - - - - - ${SUB_DEPENDENCY}" )

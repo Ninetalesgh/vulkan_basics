@@ -1,7 +1,10 @@
 cmake_minimum_required ( VERSION 3.15.0 )
 
-add_brewing_station_static_library( renderer_dx12 renderer )
+add_brewing_station_static_library( renderer_dx12 core )
 
+target_link_directories( renderer_dx12 
+                            INTERFACE 
+                            "${BREWING_STATION_EXTERNAL_DIR}/lib/DirectXTex" )
 target_link_libraries( renderer_dx12 "DirectXTex" )
 
 include_directories( "${BREWING_STATION_EXTERNAL_DIR}/include" )

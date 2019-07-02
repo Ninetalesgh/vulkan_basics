@@ -1,7 +1,7 @@
 #ifndef CORE_FILE_H
 #define CORE_FILE_H
 
-namespace bs::core
+namespace bs
 {
 
   class File

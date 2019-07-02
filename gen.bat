@@ -4,12 +4,12 @@ if [%1] == [] goto NoPlatform
 
 
 set CMAKE="C:\Program Files\CMake\bin\cmake.exe"
-set GENERATOR="Visual Studio 16 2019"
-set PLATFORM=%1
-set SYSTEM_TYPE=%2
+set GENERATOR=%1
+set PLATFORM=%2
+set SYSTEM_TYPE=%3
 set SOURCE_DIR=%cd%\code
 set BUILD_DIR=%SOURCE_DIR%\..\build
-set STARTUP_PROJECT=%3
+set STARTUP_PROJECT=%4
 
 echo cmake executable: %CMAKE%
 echo generator: %GENERATOR%

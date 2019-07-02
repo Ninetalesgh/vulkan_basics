@@ -9,6 +9,7 @@ MACRO ( add_brewing_station_shared_library SUB_LIBRARY_NAME )
     set( SUB_FILES ${SUB_FILES} ${INL_REC} )
     set( SUB_FILES ${SUB_FILES} ${INCLUDE_REC} )
     
+    link_directories( "${BREWING_STATION_LIBRARY_OUTPUT_DIRECTORY}" )
     add_library( ${SUB_LIBRARY_NAME} SHARED ${SUB_FILES} )
     
     set_target_properties( ${SUB_LIBRARY_NAME} PROPERTIES FOLDER "libraries/shared" )
@@ -17,7 +18,6 @@ MACRO ( add_brewing_station_shared_library SUB_LIBRARY_NAME )
     source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SUB_FILES} )
     
     include_directories( "include" )
-    link_directories( "${BREWING_STATION_LIBRARY_OUTPUT_DIRECTORY}" )
 
     message( STATUS "- ${SUB_LIBRARY_NAME}" ) 
 
@@ -45,5 +45,6 @@ message( STATUS "---------------------------------------" )
 message( STATUS "SHARED LIBRARIES: ")
 
 add_subdirectory( cauldron_native )
+add_subdirectory( playground )
 
 message( STATUS "---------------------------------------" )

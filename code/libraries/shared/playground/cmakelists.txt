@@ -1,0 +1,4 @@
+cmake_minimum_required ( VERSION 3.15.0 )
+
+add_brewing_station_shared_library( playground core )
+
