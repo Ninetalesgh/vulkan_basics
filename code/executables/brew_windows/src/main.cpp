@@ -89,13 +89,13 @@ int WINAPI main(HINSTANCE instance, HINSTANCE previous_instance, PWSTR command_l
 
 
   //bs::renderer::RendererDx12 renderer;
-  auto brewing_station = bs::core::Core::Create();
+  //auto brewing_station = bs::core::Core::Create();
   bs::brew::Brew brew;
+  bs::core::Core brewing_station_instance;
 
-
-  brewing_station->Init(nullptr);
-  brewing_station->RegisterApp(&brew);
-  //brewing_station->Run();
+  brewing_station_instance.Init();
+  brewing_station_instance.RegisterApp(&brew);
+  brewing_station_instance.Run();
 
  // while (running)
   {
