@@ -16,14 +16,14 @@ namespace bs::core::visual
       , b(0)
     {}
 
-    Color32Bit(u8 _a, u8 _r, u8 _g, u8 _b)
+    Color32Bit(uint8 _a, uint8 _r, uint8 _g, uint8 _b)
       : a(_a)
       , r(_r)
       , g(_g)
       , b(_b)
     {}
 
-    Color32Bit(u32 _argb)
+    Color32Bit(uint32 _argb)
       : argb(_argb)
     {
       
@@ -31,15 +31,15 @@ namespace bs::core::visual
 
     union
     {
-      u32 argb;
+      uint32 argb;
       struct
       {
         //TODO endianness
-        u8 b, g, r, a;
+        uint8 b, g, r, a;
       };
     };
 
-    INLINE operator u32() { return argb; }
+    INLINE operator uint32() { return argb; }
   };
 
   struct Color
@@ -66,10 +66,10 @@ namespace bs::core::visual
     INLINE explicit operator Color32Bit() 
     {
       //TODO make sure rgba are 0-1
-      u8 a8 = static_cast<u8>( a * 255.0f );
-      u8 r8 = static_cast<u8>( r * 255.0f );
-      u8 g8 = static_cast<u8>( g * 255.0f );
-      u8 b8 = static_cast<u8>( b * 255.0f );
+      uint8 a8 = static_cast<uint8>( a * 255.0f );
+      uint8 r8 = static_cast<uint8>( r * 255.0f );
+      uint8 g8 = static_cast<uint8>( g * 255.0f );
+      uint8 b8 = static_cast<uint8>( b * 255.0f );
       return Color32Bit{ a8, r8, g8, b8 };
     }
 

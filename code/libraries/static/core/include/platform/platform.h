@@ -1,7 +1,7 @@
 #ifndef CORE_PLATFORM_H
 #define CORE_PLATFORM_H
 
-namespace bs::core
+namespace bs::platform
 {
 
   class IPlatform

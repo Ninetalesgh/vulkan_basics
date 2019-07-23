@@ -7,6 +7,8 @@ namespace bs::scene
   class IScene : public core::IObject
   {
   public:
+
+
   };
 }
 

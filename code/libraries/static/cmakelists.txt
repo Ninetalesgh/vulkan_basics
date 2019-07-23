@@ -17,7 +17,7 @@ MACRO ( add_brewing_station_static_library SUB_LIBRARY_NAME )
     source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SUB_FILES} )
     
     include_directories( "include" )
-
+  
     message( STATUS "- ${SUB_LIBRARY_NAME}" ) 
 
     if ( ${ARGC} GREATER "1" ) 
@@ -30,7 +30,11 @@ MACRO ( add_brewing_station_static_library SUB_LIBRARY_NAME )
         get_target_property( DEPENDENCY_SOURCE_DIR ${SUB_DEPENDENCY} SOURCE_DIR )
         include_directories( "${DEPENDENCY_SOURCE_DIR}/include" )
 
-        target_link_libraries( ${SUB_APP_NAME} ${SUB_DEPENDENCY} )
+        target_include_directories( ${SUB_LIBRARY_NAME} PUBLIC
+                                    $<BUILD_INTERFACE:${DEPENDENCY_SOURCE_DIR}/include>
+                                    $<INSTALL_INTERFACE:include> )
+
+        target_link_libraries( ${SUB_LIBRARY_NAME} ${SUB_DEPENDENCY} )
         
         message( STATUS "- - - - - - - ${SUB_DEPENDENCY}" )
     endforeach()

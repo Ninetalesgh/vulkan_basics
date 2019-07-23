@@ -19,18 +19,18 @@ namespace visual
       , m_Height(0)
       , m_Size(0)
     {}
-    Bitmap(u32 _width, u32 _height);
+    Bitmap(uint32 _width, uint32 _height);
     ~Bitmap();
 
 
     void Fill(Color _color);
-    void Resize(u32 _newWidth, u32 _newHeight);
+    void Resize(uint32 _newWidth, uint32 _newHeight);
 
   private:
-    u32* m_Data;
-    u32  m_Width;
-    u32  m_Height;
-    u32  m_Size;
+    uint32* m_Data;
+    uint32  m_Width;
+    uint32  m_Height;
+    uint32  m_Size;
   };
   
 }};

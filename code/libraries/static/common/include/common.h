@@ -25,9 +25,18 @@
 
 
 //TODO find a place for these type redefinitions 
-using u8 = unsigned char;
-using u32 = unsigned int;
-using s32 = int32_t;
+
+using int8  = int8_t;
+using uint8 = uint8_t;
+
+using int16  = int16_t;
+using uint16 = uint16_t;
+
+using int32  = int32_t;
+using uint32 = uint32_t;
+
+using int64  = int64_t;
+using uint64 = uint64_t;
 
 
 #endif // !UTIL_NATIVE_DEFINES_H

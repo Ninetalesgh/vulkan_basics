@@ -1,5 +1,5 @@
-#ifndef CORE_PTR_H
-#define CORE_PTR_H
+#ifndef COMMON_PTR_H
+#define COMMON_PTR_H
 
 #include <memory>
 

@@ -1,5 +1,5 @@
-#ifndef CORE_MEMORY_H
-#define CORE_MEMORY_H
+#ifndef COMMON_MEMORY_H
+#define COMMON_MEMORY_H
 
 namespace bs
 {

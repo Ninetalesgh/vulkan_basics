@@ -1,47 +1,35 @@
 
-#include "modules/renderer.h"
+
+#include "platform/renderer.h"
 #include "core/core.h"
+#include <ctime>
 
 namespace bs::core
 {
-  class Core : public ICore
-  {
-  public:
-    void Init(PlatformDesc*) override
-    {
-    }
-
-    virtual void RegisterApp(IApp*) override
-    {
-    }
-
-    virtual void UnregisterApp(IApp*) override
-    {
-    }
-
-    void RegisterModule(modules::IModule*) override
-    {
-    }
-
-    void UnregisterModule(modules::IModule*) override
-    {
-    }
-
-    void Run() override
-    {
-    }
-
-    void End() override
-    {
-    }
-
-  private:
-    // Inherited via ICore
-  };
-
-  unique<ICore> ICore::Create()
+  unique<Core> Core::Create()
   {
     return std::make_unique<Core>();
-    //return new Core();
+  }
+
+  void Core::Init(PlatformDesc*)
+  {
+
+  }
+
+  void Core::End()
+  {
+
+  }
+
+  void Core::Run()
+  {
+
+  }
+
+  void Core::RegisterApp(IApp*)
+  {
+  }
+  void Core::UnregisterApp(IApp*)
+  {
   }
 };

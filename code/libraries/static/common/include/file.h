@@ -1,5 +1,5 @@
-#ifndef CORE_FILE_H
-#define CORE_FILE_H
+#ifndef COMMON_FILE_H
+#define COMMON_FILE_H
 
 namespace bs
 {

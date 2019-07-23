@@ -1,7 +1,7 @@
 #include "common.h"
 
 
-EXPORT void FetchCurrentFrame_PInvoke(u8* _outImg, u32 _size)
+EXPORT void FetchCurrentFrame_PInvoke(uint8* _outImg, uint32 _size)
 {
   int index = 0;
   while (index < _size)

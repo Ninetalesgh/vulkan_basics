@@ -14,20 +14,28 @@ namespace bs::core
   class PlatformDesc;
   class IApp;
 
-  class ICore
+  class Core
   {
   public:
-    static unique<ICore> Create();
+    static unique<Core> Create();
 
-    virtual void Init(PlatformDesc*) = 0;
-    virtual void RegisterApp(IApp*) = 0;
-    virtual void RegisterModule(modules::IModule*) = 0; //TODO these go into app
-    virtual void Run() = 0;
+    void Init(PlatformDesc*);
+    void End();
+
+    void Run();
+
+    void RegisterApp(IApp*);
+    void UnregisterApp(IApp*);
+
+   // void RegisterModule(modules::IModule*); //TODO these go into app
+   // void UnregisterModule(modules::IModule*);
+
+    //void RegisterInput();
+    //void UnregisterInput();
+
+    //void Run();
 
 
-    virtual void UnregisterModule(modules::IModule*) = 0;
-    virtual void UnregisterApp(IApp*) = 0;
-    virtual void End() = 0;
   };
 
 };

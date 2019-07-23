@@ -5,7 +5,7 @@
 #include <core/core.h>
 
 //#include <stdio.h>
-//#include <iostream>
+#include <iostream>
 
 #include "Windowsx.h"
 #include "Windows.h"
@@ -67,9 +67,9 @@ int WINAPI main(HINSTANCE instance, HINSTANCE previous_instance, PWSTR command_l
 {
   AllocConsole();
 
-  auto consoleFile = freopen("conin$", "r", stdin);
-       consoleFile = freopen("conout$", "w", stdout);
-       consoleFile = freopen("conout$", "w", stderr);
+  FILE* consoleFile = freopen("conin$", "r", stdin);
+        consoleFile = freopen("conout$", "w", stdout);
+        consoleFile = freopen("conout$", "w", stderr);
 
   HRESULT hresult;
 
@@ -89,13 +89,13 @@ int WINAPI main(HINSTANCE instance, HINSTANCE previous_instance, PWSTR command_l
 
 
   //bs::renderer::RendererDx12 renderer;
-  auto brewing_station = bs::core::ICore::Create();
+  auto brewing_station = bs::core::Core::Create();
   bs::brew::Brew brew;
 
 
   brewing_station->Init(nullptr);
   brewing_station->RegisterApp(&brew);
-  brewing_station->Run();
+  //brewing_station->Run();
 
  // while (running)
   {
