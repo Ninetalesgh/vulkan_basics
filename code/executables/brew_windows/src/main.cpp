@@ -72,6 +72,10 @@ int WINAPI main(HINSTANCE instance, HINSTANCE previous_instance, PWSTR command_l
         consoleFile = freopen("conout$", "w", stdout);
         consoleFile = freopen("conout$", "w", stderr);
 
+  brs::renderer::vulkan::RendererVulkan test;
+  test.main();
+  return 0;
+
   HRESULT hresult;
 
   WNDCLASSA window_class = {};
@@ -88,8 +92,6 @@ int WINAPI main(HINSTANCE instance, HINSTANCE previous_instance, PWSTR command_l
   ShowWindow(window, SW_SHOW);
   printf("window initialized.\n");
 
-  brs::renderer::vulkan::RendererVulkan test;
-  test.main();
 
   //bs::renderer::RendererDx12 renderer;
   //auto brewing_station = bs::core::Core::Create();

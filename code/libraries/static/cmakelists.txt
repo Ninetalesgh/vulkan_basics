@@ -35,7 +35,6 @@ MACRO ( add_brewing_station_static_library SUB_LIBRARY_NAME )
         target_include_directories( ${SUB_LIBRARY_NAME} PUBLIC
                                     $<BUILD_INTERFACE:${DEPENDENCY_SOURCE_DIR}/include>
                                     $<INSTALL_INTERFACE:include> )
-
         target_link_libraries( ${SUB_LIBRARY_NAME} ${SUB_DEPENDENCY} )
         
         message( STATUS "- - - - - - - ${SUB_DEPENDENCY}" )

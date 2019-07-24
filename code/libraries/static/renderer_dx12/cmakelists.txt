@@ -7,4 +7,4 @@ target_link_directories( renderer_dx12
                             "${BREWING_STATION_EXTERNAL_DIR}/lib/DirectXTex" )
 target_link_libraries( renderer_dx12 "DirectXTex" )
 
-include_directories( "${BREWING_STATION_EXTERNAL_DIR}/include" )
+target_include_directories( renderer_dx12 PRIVATE "${BREWING_STATION_EXTERNAL_DIR}/include" )
