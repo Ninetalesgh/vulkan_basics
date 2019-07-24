@@ -11,7 +11,7 @@ namespace bs::core
     return std::make_unique<Core>();
   }
 
-  void Core::Init(PlatformDesc*)
+  void Core::Init()
   {
 
   }

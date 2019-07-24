@@ -1,0 +1,15 @@
+cmake_minimum_required ( VERSION 3.15.0 )
+
+add_brewing_station_static_library( renderer_vulkan core )
+
+if ( "${BREWING_STATION_TARGET_PLATFORM}" MATCHES "windows" )
+    target_compile_definitions( renderer_vulkan PRIVATE _GLFW_WIN32 )
+    target_include_directories( renderer_vulkan PRIVATE "$ENV{VULKAN_SDK}/include" )
+else()
+endif()
+
+if ( NOT "$ENV{VULKAN_SDK}" MATCHES "VulkanSDK" )
+    message ( "! ! ! ! ! ! ! ! ! VULKAN SDK MISSING ! ! ! ! ! ! ! ! !")
+    message ( "! ! ! ! Download and install the Vulkan SDK  ! ! ! ! !" )
+    message ( "! ! ! ! ! ! ! ! ! VULKAN SDK MISSING ! ! ! ! ! ! ! ! !")
+endif()

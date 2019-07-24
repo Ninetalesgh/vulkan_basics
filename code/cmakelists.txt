@@ -1,17 +1,25 @@
 cmake_minimum_required ( VERSION 3.15.0 )
 
 project( "brewing_station_${BREWING_STATION_TARGET_PLATFORM}" )
-message (${CMAKE_CXX_FLAGS})
+message ( "CMake version: ${CMAKE_SYSTEM_VERSION}" )
+
+message ( "=======================================================================================================================" )
+message ( "=======================================================================================================================" )
+message ( "============================================= MAKING BREWING STATION ==================================================" )
+message ( "=======================================================================================================================" )
+message ( "=======================================================================================================================" )
+
 
 if ( ${BREWING_STATION_TARGET_PLATFORM} MATCHES "windows" )
-    set ( CMAKE_CXX_FLAGS "/D_WINDOWS" )
+set ( CMAKE_CXX_FLAGS "/D_WINDOWS" )
 elseif( ${BREWING_STATION_TARGET_PLATFORM} MATCHES "android" )
-    set ( CMAKE_CXX_FLAGS "/D_ANDROID" )
+set ( CMAKE_CXX_FLAGS "/D_ANDROID" )
 endif()
 
 set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17" )
 
-message(STATUS "CMAKE_SYSTEM_VERSION = ${CMAKE_SYSTEM_VERSION}")
+
+message ( STATUS "Compiler flags: ${CMAKE_CXX_FLAGS}" )
 
 #target output directory
 set ( CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib" )
@@ -19,7 +27,7 @@ set ( CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib" )
 set ( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin" )
 
 set ( BREWING_STATION_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib" )
-set ( BREWING_STATION_EXTERNAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external" )
+set ( BREWING_STATION_EXTERN_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external" )
 
 #set ( VALID_BUILD_TYPES "Release" "Debug" ) #TODO ? 
 #set( CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE )

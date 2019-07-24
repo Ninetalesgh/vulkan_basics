@@ -1,6 +1,6 @@
 cmake_minimum_required ( VERSION 3.15.0 )
 
-add_brewing_station_executable( brew_windows core renderer_dx12 )
+add_brewing_station_executable( brew_windows core renderer_vulkan )
 
 #set install targets
 install( TARGETS brew_windows DESTINATION "bin/brew_windows" )

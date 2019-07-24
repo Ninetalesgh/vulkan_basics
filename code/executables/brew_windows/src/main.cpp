@@ -1,7 +1,8 @@
 
 #include "brew.h"
 
-//#include <renderer_dx12.h>
+#include <renderer_vulkan.h>
+
 #include <core/core.h>
 
 //#include <stdio.h>
@@ -87,6 +88,8 @@ int WINAPI main(HINSTANCE instance, HINSTANCE previous_instance, PWSTR command_l
   ShowWindow(window, SW_SHOW);
   printf("window initialized.\n");
 
+  brs::renderer::vulkan::RendererVulkan test;
+  test.main();
 
   //bs::renderer::RendererDx12 renderer;
   //auto brewing_station = bs::core::Core::Create();
