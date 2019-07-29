@@ -3,7 +3,7 @@
 #include "memory.h"
 
 
-bs::core::visual::Bitmap::Bitmap(uint32 _width, uint32 _height)
+bs::core::visual::Bitmap::Bitmap(u32 _width, u32 _height)
   : m_Width(_width)
   , m_Height(_height)
   , m_Size(_width * _height)
@@ -25,6 +25,6 @@ void bs::core::visual::Bitmap::Fill(bs::core::visual::Color _color)
   }
 }
 
-void bs::core::visual::Bitmap::Resize(uint32 _newWidth, uint32 _newHeight)
+void bs::core::visual::Bitmap::Resize(u32 _newWidth, u32 _newHeight)
 {
 }

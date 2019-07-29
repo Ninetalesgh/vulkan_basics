@@ -11,6 +11,8 @@ target_link_libraries( renderer_vulkan "vulkan-1" )
 
 if ( "${BREWING_STATION_TARGET_PLATFORM}" MATCHES "windows" )
     target_compile_definitions( renderer_vulkan PRIVATE _GLFW_WIN32 )
+    target_compile_definitions( renderer_vulkan PRIVATE GLFW_EXPOSE_NATIVE_WIN32 )
+    target_compile_definitions( renderer_vulkan PRIVATE VK_USE_PLATFORM_WIN32_KHR )
     target_include_directories( renderer_vulkan PRIVATE "$ENV{VULKAN_SDK}/include" )
 else()
 endif()
