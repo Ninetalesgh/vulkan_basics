@@ -1,0 +1,2 @@
+glslangValidator.exe triangle.vert.glsl -V -o triangle.vert.spv
+glslangValidator.exe triangle.frag.glsl -V -o triangle.frag.spv
