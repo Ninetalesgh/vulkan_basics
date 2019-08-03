@@ -8,7 +8,7 @@ set GENERATOR=%1
 set PLATFORM=%2
 set SYSTEM_TYPE=%3
 set SOURCE_DIR=%cd%\code
-set BUILD_DIR=%SOURCE_DIR%\..\build
+set BUILD_DIR=%cd%\build
 set STARTUP_PROJECT=%4
 
 echo CMake executable: %CMAKE%
