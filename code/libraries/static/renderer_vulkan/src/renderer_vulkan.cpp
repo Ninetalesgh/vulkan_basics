@@ -75,7 +75,7 @@ void DestroyDebugUtilsMessengerEXT( VkInstance instance, VkDebugUtilsMessengerEX
   }
 }
 
-u32 GetGraphicsQueueFamily( VkPhysicalDevice physicalDevice )
+u32 GetGraphicsFamilyIndex( VkPhysicalDevice physicalDevice )
 {
   u32 queueFamilyPropertyCount = 0;
   vkGetPhysicalDeviceQueueFamilyProperties( physicalDevice, &queueFamilyPropertyCount, 0 );
@@ -91,35 +91,63 @@ u32 GetGraphicsQueueFamily( VkPhysicalDevice physicalDevice )
   }
 
   assert( 0 );
+
   //TODO: this can be used in FetchPhysicalDevice to fetch rasterization-capable device
-  return ~0u;
+  return VK_QUEUE_FAMILY_IGNORED;
+}
+
+bool SupportsPresentation( VkPhysicalDevice physicalDevice, u32 familyIndex )
+{
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+  return vkGetPhysicalDeviceWin32PresentationSupportKHR( physicalDevice, familyIndex );
+#endif
+  assert( 0 );
+  return false;
 }
 
 VkPhysicalDevice FetchPhysicalDevice( VkPhysicalDevice* physicalDevices, u32 physicalDeviceCount )
 {
-  //TODO something?
+  VkPhysicalDevice discreteDevice = 0;
+  VkPhysicalDevice fallbackDevice = 0;
+  //printf( "Available GPUs:\n");
+
   for ( u32 i = 0; i < physicalDeviceCount; ++i )
   {
     VkPhysicalDeviceProperties props;
     vkGetPhysicalDeviceProperties( physicalDevices[i], &props );
 
-    if ( props.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU )
+   // printf( " - GPU%d: %s\n", i, props.deviceName );
+
+    u32 familyIndex = GetGraphicsFamilyIndex( physicalDevices[i] );
+    if ( familyIndex == VK_QUEUE_FAMILY_IGNORED )
+      continue;
+
+    if ( !SupportsPresentation( physicalDevices[i], familyIndex ) )
+      continue;
+
+    if ( !discreteDevice && props.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU )
     {
-      printf( "Discrete GPU found.\n" );
-      return physicalDevices[i];
+      discreteDevice = physicalDevices[i];
     }
 
-    if ( physicalDeviceCount > 0 )
+    if ( !fallbackDevice )
     {
-      VkPhysicalDeviceProperties props;
-      vkGetPhysicalDeviceProperties( physicalDevices[0], &props );
-      printf( "No discrete GPU found, fetching fallback.\n" );
-      return physicalDevices[0];
+      fallbackDevice = physicalDevices[i];
     }
-
-    printf( "No physical devices available!\n" );
-    return 0;
   }
+  VkPhysicalDevice result = discreteDevice ? discreteDevice : fallbackDevice;
+  if ( result )
+  {
+    VkPhysicalDeviceProperties props;
+    vkGetPhysicalDeviceProperties( result, &props );
+    printf( "Selected GPU: %s\n", props.deviceName );
+  }
+  else
+  {
+    printf( "ERROR: No GPUs found\n" );
+  }
+
+  return result;
 }
 
 
@@ -530,8 +558,8 @@ void brs::renderer::vulkan::RendererVulkan::main()
   VkPhysicalDevice physicalDevice = FetchPhysicalDevice( physicalDevices, physicalDeviceCount );
   assert( physicalDevice );
 
-  u32 familyIndex = GetGraphicsQueueFamily( physicalDevice );
-
+  u32 familyIndex = GetGraphicsFamilyIndex( physicalDevice );
+  assert( familyIndex != VK_QUEUE_FAMILY_IGNORED );
   //Device
   VkDevice device = CreateDevice( instance, physicalDevice, &familyIndex );
   assert( device );
@@ -577,10 +605,10 @@ void brs::renderer::vulkan::RendererVulkan::main()
   assert( renderPass );
 
   //Shaders
-  VkShaderModule triangleVS = LoadShader( device, "C:/Users/Camillo/Documents/Projects/brewing_station/content/shaders/triangle.vert.spv" );
+  VkShaderModule triangleVS = LoadShader( device, "shaders/triangle.vert.spv" );
   assert( triangleVS );
 
-  VkShaderModule triangleFS = LoadShader( device, "C:/Users/Camillo/Documents/Projects/brewing_station/content/shaders/triangle.frag.spv" );
+  VkShaderModule triangleFS = LoadShader( device, "shaders/triangle.frag.spv" );
   assert( triangleFS );
 
   VkPipelineCache pipelineCache = 0;
@@ -728,8 +756,6 @@ void brs::renderer::vulkan::RendererVulkan::main()
 
   }
 
-  glfwDestroyWindow( window );
-
   vkDestroyCommandPool( device, commandPool, 0 );
 
   for ( u32 i = 0; i < swapchainImageCount; ++i )
@@ -750,7 +776,6 @@ void brs::renderer::vulkan::RendererVulkan::main()
   vkDestroySemaphore( device, releaseSemaphore, 0 );
   vkDestroySemaphore( device, aquireSemaphore, 0 );
 
-
   vkDestroySwapchainKHR( device, swapchain, 0 );
   vkDestroySurfaceKHR( instance, surface, 0 );
 
@@ -760,13 +785,5 @@ void brs::renderer::vulkan::RendererVulkan::main()
 
   vkDestroyInstance( instance, 0 );
 
-
-
-
-
-
-
-
-
-
+  glfwDestroyWindow( window );
 }

@@ -7,6 +7,7 @@ set CMAKE="C:\Program Files\CMake\bin\cmake.exe"
 set GENERATOR=%1
 set PLATFORM=%2
 set SYSTEM_TYPE=%3
+set ROOT_DIR=%cd%
 set SOURCE_DIR=%cd%\code
 set BUILD_DIR=%cd%\build
 set STARTUP_PROJECT=%4
@@ -39,7 +40,8 @@ echo ===========================================================================
 
 %CMAKE% -G %GENERATOR% -A %SYSTEM_TYPE% %SOURCE_DIR%^
  -DBREWING_STATION_TARGET_PLATFORM=%PLATFORM%^
- -DBREWING_STATION_STARTUP_PROJECT=%STARTUP_PROJECT%
+ -DBREWING_STATION_STARTUP_PROJECT=%STARTUP_PROJECT%^
+ -DBREWING_STATION_ROOT_DIR=%ROOT_DIR%
 
 
 goto error

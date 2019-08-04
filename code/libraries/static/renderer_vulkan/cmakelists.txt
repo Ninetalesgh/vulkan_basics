@@ -2,12 +2,11 @@ cmake_minimum_required ( VERSION 3.15.0 )
 
 add_brewing_station_static_library( renderer_vulkan core )
 
-
-
 target_link_directories( renderer_vulkan 
                             INTERFACE 
                             "$ENV{VULKAN_SDK}/Lib" )
 target_link_libraries( renderer_vulkan "vulkan-1" )
+
 
 if ( "${BREWING_STATION_TARGET_PLATFORM}" MATCHES "windows" )
     target_compile_definitions( renderer_vulkan PRIVATE _GLFW_WIN32 )
@@ -16,6 +15,47 @@ if ( "${BREWING_STATION_TARGET_PLATFORM}" MATCHES "windows" )
     target_include_directories( renderer_vulkan PRIVATE "$ENV{VULKAN_SDK}/include" )
 else()
 endif()
+
+
+#add_custom_target(renderer_vulkan_shaders
+#    COMMAND "$(VULKAN_SDK)/Bin/glslangValidator %(FullPath) -V -o %(Filename).spv"    
+#    WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+#    COMMENT "Building Vulkan Shaders:"
+#    VERBATIM USES_TERMINAL
+#    SOURCES "${GLSL_SOURCE_FILES}")
+#
+#add_dependencies(renderer_vulkan renderer_vulkan_shaders)
+
+
+#from github.com/vlsh
+set ( GLSL_VALIDATOR "$ENV{VULKAN_SDK}/Bin/glslangValidator.exe" )
+file ( GLOB_RECURSE GLSL_SOURCE_VERT_FILES "${BREWING_STATION_ASSETS_DIR}/shaders/*.vert.glsl" )
+source_group( "vertex" FILES ${GLSL_SOURCE_VERT_FILES} )
+
+file ( GLOB_RECURSE GLSL_SOURCE_FRAG_FILES "${BREWING_STATION_ASSETS_DIR}/shaders/*.frag.glsl" )
+source_group( "fragment" FILES ${GLSL_SOURCE_FRAG_FILES} )
+
+set ( GLSL_SOURCE_FILES ${GLSL_SOURCE_VERT_FILES} ${GLSL_SOURCE_FRAG_FILES} )
+
+foreach( GLSL ${GLSL_SOURCE_FILES} )
+get_filename_component ( FILE_NAME ${GLSL} NAME_WLE )
+set ( SPIRV "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/shaders/${FILE_NAME}.spv" )
+add_custom_command(
+    OUTPUT ${SPIRV}
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/shaders/"
+    COMMAND ${GLSL_VALIDATOR} -V ${GLSL} -o ${SPIRV}
+    DEPENDS ${GLSL} )
+    list(APPEND SPIRV_BINARY_FILES ${SPIRV} )
+    endforeach(GLSL)
+    
+add_custom_target(
+    renderer_vulkan_shaders 
+    DEPENDS "${SPIRV_BINARY_FILES}"
+    SOURCES "${GLSL_SOURCE_FILES}" )
+
+add_dependencies ( renderer_vulkan renderer_vulkan_shaders )
+set_target_properties ( renderer_vulkan_shaders PROPERTIES FOLDER "libraries/static" )
+
 
 if ( NOT "$ENV{VULKAN_SDK}" MATCHES "VulkanSDK" )
     message ( "! ! ! ! ! ! ! ! ! VULKAN SDK MISSING ! ! ! ! ! ! ! ! !")

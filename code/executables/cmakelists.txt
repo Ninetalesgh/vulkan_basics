@@ -12,8 +12,10 @@ MACRO ( add_brewing_station_executable EXE_NAME )
     link_directories( "${BREWING_STATION_LIBRARY_OUTPUT_DIRECTORY}" )
     add_executable( ${EXE_NAME} ${SUB_FILES} )
     
-    set_target_properties( ${EXE_NAME} PROPERTIES FOLDER "executables" )
-    
+    set_target_properties( ${EXE_NAME} PROPERTIES 
+        FOLDER "executables"
+        VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+        
     source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SUB_FILES} )
     
     include_directories( "include" )
