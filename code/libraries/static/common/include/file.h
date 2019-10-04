@@ -1,5 +1,4 @@
-#ifndef COMMON_FILE_H
-#define COMMON_FILE_H
+#pragma once
 
 namespace bs
 {
@@ -10,5 +9,3 @@ namespace bs
   };
 
 }
-
-#endif

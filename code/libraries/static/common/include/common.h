@@ -1,6 +1,4 @@
-#ifndef COMMON_COMMON_H
-#define COMMON_COMMON_H
-
+#pragma once
 #include <cstdint>
 
 #define INLINE
@@ -38,6 +36,3 @@ using u32 = uint32_t;
 
 using i64  = int64_t;
 using u64 = uint64_t;
-
-
-#endif // !UTIL_NATIVE_DEFINES_H

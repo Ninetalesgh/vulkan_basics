@@ -1,5 +1,4 @@
-#ifndef COMMON_MEMORY_H
-#define COMMON_MEMORY_H
+#pragma once
 
 namespace bs
 {
@@ -10,5 +9,3 @@ namespace bs
   public:
   };
 }
-
-#endif

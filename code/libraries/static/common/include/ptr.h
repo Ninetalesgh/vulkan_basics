@@ -1,6 +1,4 @@
-#ifndef COMMON_PTR_H
-#define COMMON_PTR_H
-
+#pragma once
 #include <memory>
 
 namespace bs
@@ -31,6 +29,3 @@ namespace bs
 
   //};
 }
-
-
-#endif
