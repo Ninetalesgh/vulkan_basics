@@ -72,9 +72,9 @@ int WINAPI main(HINSTANCE instance, HINSTANCE previous_instance, PWSTR command_l
         consoleFile = freopen("conout$", "w", stdout);
         consoleFile = freopen("conout$", "w", stderr);
 
-  //brs::renderer::vulkan::RendererVulkan test;
-  //test.main();
-  //return 0;
+  brs::renderer::vulkan::RendererVulkan test;
+  test.main();
+  return 0;
 
   HRESULT hresult;
 
