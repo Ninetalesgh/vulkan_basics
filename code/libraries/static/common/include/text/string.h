@@ -6,11 +6,20 @@
 
 namespace bs
 {
-  template <u32 size>
+  template <u32 CAPACITY>
   struct String_FixedSize
   {
+    String_FixedSize( char const* string )
+    {
+      char const* runner = string;
+      while ( runner++ != '\0' ) {}
+      
+      u32 size = runner - string;
+      //data = (char const*)malloc( size );
+      memcpy( (void*)data, string, size );
+    }
 
-    char data[size];
+    char data[CAPACITY];
   };
 
   struct String
@@ -38,5 +47,5 @@ namespace bs
   using String8 = String_FixedSize<8>;
   using String16 = String_FixedSize<16>;
   using String32 = String_FixedSize<32>;
-
+  using String64 = String_FixedSize<64>;
 }
