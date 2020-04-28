@@ -167,7 +167,7 @@ function initShaderProgram(gl, vsSource, fsSource) {
     mat4.rotate(modelViewMatrix,  // destination matrix
                 modelViewMatrix,  // matrix to rotate
                 squareRotation,   // amount to rotate in radians
-                [0, 1, 0.707]);       // axis to rotate around
+                [0, 0.3, 0.707]);       // axis to rotate around
 
     // Tell WebGL how to pull out the positions from the position
     // buffer into the vertexPosition attribute.
@@ -238,7 +238,7 @@ function initShaderProgram(gl, vsSource, fsSource) {
 
 
 
-function main() {
+function main1() {
     const canvas = document.querySelector("#glCanvas");
     // Initialize the GL context
     const gl = canvas.getContext("webgl");
@@ -277,7 +277,53 @@ function main() {
       requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
-
   }
   
+  function main2() {
+    const canvas = document.querySelector("#glCanvas2");
+    // Initialize the GL context
+    const gl = canvas.getContext("webgl");
+    const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+
+    const programInfo = {
+        program: shaderProgram,
+        attribLocations: {
+          vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
+          vertexColor: gl.getAttribLocation(shaderProgram, 'aVertexColor'),
+        },
+        uniformLocations: {
+          projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
+          modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
+        },
+      };
+
+    // Only continue if WebGL is available and working
+    if (gl === null) {
+      alert("Unable to initialize WebGL. Your browser or machine may not support it.");
+      return;
+    }
+  
+    const buffers = initBuffers(gl);
+    
+    var then = 0;
+
+    // Draw the scene repeatedly
+    function render(now) {
+      now *= 0.001;  // convert to seconds
+      const deltaTime = now - then;
+      then = now;
+  
+      drawScene(gl, programInfo, buffers, deltaTime);
+  
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+  }
+  
+  function main()
+  {
+    main1();
+    main2();
+  }
+
   window.onload = main;
