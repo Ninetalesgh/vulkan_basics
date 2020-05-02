@@ -1,8 +1,6 @@
 //thanks to https://developer.mozilla.org/ and https://youtu.be/oDiSqQT_szo
 //for their amazing WebGL tutorials
 
-var squareRotation = 0.0;
-
   // Vertex shader program
 
 const vsSource = `
@@ -54,8 +52,7 @@ var state = {
     uniformLocations: {},
   },
   app: 
-  {  
-    animations: [],
+  {
     camera: 
     {
       projectionMatrix: null,
@@ -64,7 +61,7 @@ var state = {
   },
 };
 
-function createAnimation(tickFunction)
+function createAnimation()
 {
 
   //speed
@@ -74,7 +71,6 @@ function createAnimation(tickFunction)
 
   return {
     isActive: false,
-    tick: tickFunction,
     t: 0.0,
     speed: 1.0,
 
@@ -100,15 +96,10 @@ function createObject(texture)
 
   POS_OFFSET += 3.0;
 
- // mat4.rotate(modelViewMatrix,  // destination matrix
- //             modelViewMatrix,  // matrix to rotate
- //             squareRotation,   // amount to rotate in radians
- //            [0, 0.3, 0.707]);       // axis to rotate around
-
   return {
     mvm: modelViewMatrix,
     image: texture,
-    animation: null,
+    animation: createAnimation(),
   };
 }
 
@@ -417,13 +408,21 @@ function renderObject(object)
   }
 }
 
+
 function updateObject(object, deltaTime)
 {
+
+ mat4.rotate(object.mvm,  // destination matrix
+             object.mvm,  // matrix to rotate
+             deltaTime *object.animation.speed,   // amount to rotate in radians
+            [0, 0.3, 0.707]);       // axis to rotate around
+ // object.animation.t += deltaTime/20.0;
  return;
- 
+
   mat4.translate(object.mvm,     // destination matrix
                   object.mvm,     // matrix to translate
                 [0.0, -deltaTime/2.0, 0.0]);  // amount to translate
+
 }
 
 
@@ -445,8 +444,9 @@ function main() {
     const buffers = initBuffers(state.gl); 
     
     const texture = loadTexture(state.gl, 'assets/debug_color_01.png'); 
+    const texture2 = loadTexture(state.gl, 'assets/debug_uv_01.png'); 
     const obj = createObject(texture);
-    const obj2 = createObject(texture);
+    const obj2 = createObject(texture2);
     var objects = [ obj, obj2 ];
 
 ////////////////////////
