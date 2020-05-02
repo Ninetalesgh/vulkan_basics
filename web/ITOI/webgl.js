@@ -1,28 +1,9 @@
+//thanks to https://developer.mozilla.org/ and https://youtu.be/oDiSqQT_szo
+//for their amazing WebGL tutorials
+
 var squareRotation = 0.0;
 
   // Vertex shader program
-
-  const vsSourceCOLOR = `
-  attribute vec4 aVertexPosition;
-  attribute vec4 aVertexColor;
-
-  uniform mat4 uModelViewMatrix;
-  uniform mat4 uProjectionMatrix;
-
-  varying lowp vec4 vColor;
-
-  void main(void) {
-    gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-    vColor = aVertexColor;
-  }
-`;
-const fsSourceCOLOR = `
-    varying lowp vec4 vColor;
-
-    void main(void) {
-      gl_FragColor = vColor;
-    }
-  `;
 
 const vsSource = `
     attribute vec4 aVertexPosition;
@@ -40,16 +21,112 @@ const vsSource = `
   `;
 
   const fsSource = `
+  precision mediump float;
   varying highp vec2 vTextureCoord;
 
   uniform sampler2D uSampler;
 
+  vec4 fade(float fWidth)
+  {
+    float x = vTextureCoord.x;
+    float y = vTextureCoord.y;
+
+    float denominator = (fWidth*fWidth - fWidth);
+    float xFade = min(1.5, (x*x-x)/denominator);
+    float yFade = min(1.5, (y*y-y)/denominator);
+    float result = min(1.0, xFade * yFade);
+    return vec4(result,result,result,1.0);
+  }
+
   void main(void) {
     gl_FragColor = texture2D(uSampler, vTextureCoord);
+    gl_FragColor *= fade(0.1);
   }
 `;
 
-  //
+
+var state = {
+  canvas: null,
+  gl: null,
+  programInfo: 
+  {
+    program: null,
+    attribLocations: {},
+    uniformLocations: {},
+  },
+  app: 
+  {  
+    animations: [],
+    camera: 
+    {
+      projectionMatrix: null,
+    },
+    objects: [],
+  },
+};
+
+
+function testTick(object, deltaTime)
+{
+  
+
+  mat4.translate(object.mvm,     // destination matrix
+                 object.mvm,     // matrix to translate
+                [0.0, deltaTime, 0.0]);  // amount to translate
+
+}
+
+function createAnimation(tickFunction)
+{
+
+  //speed
+  //keyPos []
+  //startTrigger
+  //tickCallback
+
+  var animation =
+  {
+    isActive: false,
+    tick: tickFunction,
+    t: 0.0,
+
+  };
+
+  return animation;
+}
+
+var POS_OFFSET = -1.5;
+
+function createObject(texture)
+{
+//load image 
+
+  // Set the drawing position to the "identity" point, which is
+  // the center of the scene.
+  const modelViewMatrix = mat4.create();
+
+  // Now move the drawing position a bit to where we want to
+  // start drawing the square.
+
+  mat4.translate(modelViewMatrix,     // destination matrix
+                  modelViewMatrix,     // matrix to translate
+                  [POS_OFFSET, 0.0, -6.0]);  // amount to translate
+
+  POS_OFFSET += 3.0;
+
+ // mat4.rotate(modelViewMatrix,  // destination matrix
+ //             modelViewMatrix,  // matrix to rotate
+ //             squareRotation,   // amount to rotate in radians
+ //            [0, 0.3, 0.707]);       // axis to rotate around
+
+  return {
+    mvm: modelViewMatrix,
+    image: texture,
+    animation: null,
+  };
+}
+
+//
 // creates a shader of the given type, uploads the source and
 // compiles it.
 //
@@ -152,8 +229,81 @@ function loadTexture(gl, url) {
   return texture;
 }
 
+function initState()
+{
+  const canvas = document.querySelector("#glCanvas");
+  // Initialize the GL context
+  const gl = canvas.getContext("webgl");
+
+  // Only continue if WebGL is available and working
+  if (gl === null) {
+    alert("Unable to initialize WebGL. Your browser or machine may not support it.");
+    return false;
+  }
+
+  function resizer()
+  {
+    //resize canvas
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    //recalculate projection matrix for the camera
+    const fieldOfView = 0.25 * Math.PI;
+    const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    const zNear = 0.1;
+    const zFar = 100.0;
+    const projectionMatrix = mat4.create();
+    mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+  
+    state.app.camera.projectionMatrix = projectionMatrix;
+
+    console.log('resized');
+  }
+  window.addEventListener('resize', resizer);
+  resizer();   
+
+  const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+  const programInfo = {
+     program: shaderProgram,
+     attribLocations: {
+       vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
+       textureCoord: gl.getAttribLocation(shaderProgram, 'aTextureCoord'),
+     },
+     uniformLocations: {
+       projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
+       modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
+       uSampler: gl.getUniformLocation(shaderProgram, 'uSampler'),
+     },
+   };
+
+   function onMouseDown(event)
+   {
+     var x = event.clientX, y = event.clientY;
+     var midX = canvas.width/2, midY = canvas.height/2;
+     var rect = event.target.getBoundingClientRect();
+     x = ((x - rect.left) - midX) / midX;
+     y = ((y - rect.top) - midY) / midY;
+    //ADD FUNCTION CALL TO f(x,y)
+     console.log("mouse: " + x + "  " + y);
+   }
+
+   canvas.addEventListener('mousedown', function(event) { onMouseDown(event); } );
 
 
+  state.canvas = canvas;
+  state.gl = gl;
+  state.programInfo = programInfo;
+
+  return true;
+}
+
+function initApp()
+{
+
+
+  return true;
+}
 
 
 function initBuffers(gl) {
@@ -178,7 +328,6 @@ function initBuffers(gl) {
       new Uint16Array(indices), gl.STATIC_DRAW);
 
 
-
   const textureCoordinates = [
     0.0,  0.0,
     1.0,  0.0,
@@ -190,17 +339,6 @@ function initBuffers(gl) {
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates),
                 gl.STATIC_DRAW);
 
-  //   const colors = [
-  //     1.0,  1.0,  1.0,  1.0,    // white
-  //     1.0,  0.0,  0.0,  1.0,    // red
-  //     0.0,  1.0,  0.0,  1.0,    // green
-  //     0.0,  0.0,  1.0,  1.0,    // blue
-  // ];
-              
-  // const colorBuffer = gl.createBuffer();
-  // gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-  // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-
   return {
       position: positionBuffer,
       textureCoord: textureCoordBuffer,
@@ -208,7 +346,7 @@ function initBuffers(gl) {
   };
 }
 
-function drawScene(gl, programInfo, buffers, texture, deltaTime) {
+function prepareFrame(gl, programInfo, buffers) {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
 
   gl.clearDepth(1.0);                 // Clear everything
@@ -216,29 +354,10 @@ function drawScene(gl, programInfo, buffers, texture, deltaTime) {
   gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  const fieldOfView = 0.25 * Math.PI;
-  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-  const zNear = 0.1;
-  const zFar = 100.0;
-  const projectionMatrix = mat4.create();
-  // create projectionMatrix
-  mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
 
-  // Set the drawing position to the "identity" point, which is
-  // the center of the scene.
-  const modelViewMatrix = mat4.create();
-
-  // Now move the drawing position a bit to where we want to
-  // start drawing the square.
-
-  mat4.translate(modelViewMatrix,     // destination matrix
-                  modelViewMatrix,     // matrix to translate
-                  [-0.0, 0.0, -6.0]);  // amount to translate
-
-  mat4.rotate(modelViewMatrix,  // destination matrix
-              modelViewMatrix,  // matrix to rotate
-              squareRotation,   // amount to rotate in radians
-              [0, 0.3, 0.707]);       // axis to rotate around
+//////////////////////////////
+//THIS IS PER MODEL////////////////////
+//////////////////////
 
   // Tell WebGL how to pull out the positions from the position
   // buffer into the vertexPosition attribute.
@@ -274,7 +393,11 @@ function drawScene(gl, programInfo, buffers, texture, deltaTime) {
   }
 
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
-  
+
+//////////////////////////
+// PER MODEL END/////////////////////////
+/////////////////////////
+
   // Tell WebGL to use our program when drawing
   gl.useProgram(programInfo.program);
 
@@ -282,84 +405,76 @@ function drawScene(gl, programInfo, buffers, texture, deltaTime) {
   gl.uniformMatrix4fv(
       programInfo.uniformLocations.projectionMatrix,
       false,
-      projectionMatrix);
+      state.app.camera.projectionMatrix);
+}
+
+function renderObject(object)
+{
+  const gl = state.gl;
+  const programInfo = state.programInfo;
+
   gl.uniformMatrix4fv(
       programInfo.uniformLocations.modelViewMatrix,
       false,
-      modelViewMatrix);
+      object.mvm);
 
   gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D, texture); 
+  gl.bindTexture(gl.TEXTURE_2D, object.image);
   gl.uniform1i(programInfo.uniformLocations.uSampler, 0);
   {
-    const indexCount = 6;
+    const indexCount = 6; // DEPENDS ON MODEL
     const type = gl.UNSIGNED_SHORT;
     const offset = 0;
-    
-    //gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount);
+
     gl.drawElements(gl.TRIANGLES, indexCount, type, offset);
   }
+}
 
-    // Update the rotation for the next draw
+function updateObject(object, deltaTime)
+{
 
-  squareRotation += deltaTime;
 }
 
 
-
-
-
-
-
 function main() {
-    const canvas = document.querySelector("#glCanvas");
-    // Initialize the GL context
-    const gl = canvas.getContext("webgl");
-    
-    function resizer()
+ 
+    if (!initState())
     {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-      console.log('resized');
-    }
-    window.addEventListener('resize', resizer);
-    resizer();    
-    
-    const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
-     const programInfo = {
-        program: shaderProgram,
-        attribLocations: {
-          vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
-          textureCoord: gl.getAttribLocation(shaderProgram, 'aTextureCoord'),
-        },
-        uniformLocations: {
-          projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
-          modelViewMatrix: gl.getUniformLocation(shaderProgram, 'uModelViewMatrix'),
-          uSampler: gl.getUniformLocation(shaderProgram, 'uSampler'),
-        },
-      };
-
-    // Only continue if WebGL is available and working
-    if (gl === null) {
-      alert("Unable to initialize WebGL. Your browser or machine may not support it.");
       return;
     }
-  
-    const buffers = initBuffers(gl);
+
+    if (!initApp())
+    {
+      return;
+    }
+
+
+    //APP CODE  //MOVE THIS TO INITAPP
+/////////////////
+    const buffers = initBuffers(state.gl); 
     
-    const texture = loadTexture(gl, 'assets/debug_color_01.png');
+    const texture = loadTexture(state.gl, 'assets/debug_color_01.png'); 
+    const obj = createObject(texture);
+    const obj2 = createObject(texture);
+    var objects = [ obj, obj2 ];
+
+////////////////////////
 
     var then = 0;
-
-    // Draw the scene repeatedly
     function render(now) {
       now *= 0.001;  // convert to seconds
       const deltaTime = now - then;
       then = now;
   
-      drawScene(gl, programInfo, buffers, texture, deltaTime);
+      //animate objects
+      objects.forEach((item) => updateObject(item, deltaTime) );
+
+      //prepare frame
+      prepareFrame(state.gl, state.programInfo, buffers);
   
+      //render objects
+      objects.forEach(renderObject);
+
       requestAnimationFrame(render);
     }
 
