@@ -26,7 +26,7 @@ const vsSource = `
 
   uniform sampler2D uSampler;
 
-  vec4 fade(float fWidth)
+  float fade(float fWidth)
   {
     float x = vTextureCoord.x;
     float y = vTextureCoord.y;
@@ -34,13 +34,12 @@ const vsSource = `
     float denominator = (fWidth*fWidth - fWidth);
     float xFade = min(1.5, (x*x-x)/denominator);
     float yFade = min(1.5, (y*y-y)/denominator);
-    float result = min(1.0, xFade * yFade);
-    return vec4(result,result,result,1.0);
+    return min(1.0, xFade * yFade);
   }
 
   void main(void) {
     gl_FragColor = texture2D(uSampler, vTextureCoord);
-    gl_FragColor *= fade(0.1);
+    gl_FragColor.w *= fade(0.1);
   }
 `;
 
@@ -65,17 +64,6 @@ var state = {
   },
 };
 
-
-function testTick(object, deltaTime)
-{
-  
-
-  mat4.translate(object.mvm,     // destination matrix
-                 object.mvm,     // matrix to translate
-                [0.0, deltaTime, 0.0]);  // amount to translate
-
-}
-
 function createAnimation(tickFunction)
 {
 
@@ -84,15 +72,13 @@ function createAnimation(tickFunction)
   //startTrigger
   //tickCallback
 
-  var animation =
-  {
+  return {
     isActive: false,
     tick: tickFunction,
     t: 0.0,
+    speed: 1.0,
 
   };
-
-  return animation;
 }
 
 var POS_OFFSET = -1.5;
@@ -233,7 +219,7 @@ function initState()
 {
   const canvas = document.querySelector("#glCanvas");
   // Initialize the GL context
-  const gl = canvas.getContext("webgl");
+  const gl = canvas.getContext("webgl", {premultipliedAlpha: false });
 
   // Only continue if WebGL is available and working
   if (gl === null) {
@@ -353,7 +339,8 @@ function prepareFrame(gl, programInfo, buffers) {
   gl.enable(gl.DEPTH_TEST);           // Enable depth testing
   gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
 //////////////////////////////
 //THIS IS PER MODEL////////////////////
@@ -432,7 +419,11 @@ function renderObject(object)
 
 function updateObject(object, deltaTime)
 {
-
+ return;
+ 
+  mat4.translate(object.mvm,     // destination matrix
+                  object.mvm,     // matrix to translate
+                [0.0, -deltaTime/2.0, 0.0]);  // amount to translate
 }
 
 
