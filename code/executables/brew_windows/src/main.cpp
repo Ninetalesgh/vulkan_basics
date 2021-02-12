@@ -72,7 +72,50 @@ int WINAPI main(HINSTANCE instance, HINSTANCE previous_instance, PWSTR command_l
         consoleFile = freopen("conout$", "w", stdout);
         consoleFile = freopen("conout$", "w", stderr);
 
-  brs::renderer::vulkan::RendererVulkan test;
+
+
+  auto calc_damage = []( int intelligence, int wits, int scoundrel )
+  {
+    float human_bonus = 0.05f;
+    float crit_chance = 0.01f * wits + human_bonus;
+    float crit_multiplier = 0.6f + 0.05f * scoundrel;  
+    return (1 + ((float)intelligence / 20.0f)) * (1 + crit_multiplier * crit_chance);
+  };
+
+  
+  {
+    int intelligence = 0;
+    int wits = 0;
+    int scoundrel = 20;
+
+    float old_damage = calc_damage( intelligence, wits, scoundrel );
+
+
+    while ( wits < 95 )
+    {
+      float damage_int = 100 * (calc_damage( intelligence + 1, wits, scoundrel ) - old_damage);
+      float damage_wits = 100 * (calc_damage( intelligence, wits + 1, scoundrel ) - old_damage);
+
+      if ( damage_int < damage_wits )
+      {
+        ++wits;
+      }
+      else
+      {
+        ++intelligence;
+      }
+
+      old_damage = calc_damage( intelligence, wits, scoundrel );
+    }
+
+    float final_damage = calc_damage( intelligence, wits, scoundrel );
+  }
+
+
+
+
+
+  bs::renderer::vulkan::RendererVulkan test;
   test.main();
   return 0;
 

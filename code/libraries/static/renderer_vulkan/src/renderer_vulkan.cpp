@@ -494,6 +494,7 @@ VkImageMemoryBarrier ImageBarrier( VkImage image
   return result;
 }
 
+
 struct Swapchain
 {
   VkSwapchainKHR swapchain = 0;
@@ -503,6 +504,8 @@ struct Swapchain
   u32 width = 0;
   u32 height = 0;
 };
+
+
 
 bool DestroySwapchain( VkDevice device, Swapchain const& swapchain )
 {
@@ -614,7 +617,7 @@ bool ResizeSwapchain( Swapchain& _swapchain
 }
 
 
-void brs::renderer::vulkan::RendererVulkan::main()
+void bs::renderer::vulkan::RendererVulkan::main()
 {
   int rc = glfwInit();
   assert( rc );
@@ -780,7 +783,7 @@ void brs::renderer::vulkan::RendererVulkan::main()
 
     //Draw calls
     vkCmdBindPipeline( commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, trianglePipeline );
-    vkCmdDraw( commandBuffer, 3, 1, 0, 0 );
+    vkCmdDraw( commandBuffer, 6, 1, 0, 0 );
 
     //End Render Pass
     vkCmdEndRenderPass( commandBuffer );

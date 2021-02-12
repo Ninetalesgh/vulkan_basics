@@ -20,8 +20,6 @@
 #endif
 
 
-
-
 //TODO find a place for these type redefinitions 
 
 using i8  = int8_t;
